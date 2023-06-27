@@ -549,7 +549,11 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
       // This ensures that the correct playback speed is always applied when
       // playing back. This is necessary because we do not set playback speed
       // when paused.
-      await _applyPlaybackSpeed();
+
+      // FORK CHANGE: fix to playback speed resetting to 1.0 on iOS
+      if (!kIsWeb && Platform.isIOS) {
+        await _applyPlaybackSpeed();
+      }
     } else {
       _timer?.cancel();
       await _videoPlayerPlatform.pause(_textureId);
